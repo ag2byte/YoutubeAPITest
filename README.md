@@ -12,7 +12,7 @@ This is a small project created with the help of [YouTube Data API v3](https://d
 #### Basic Requirements
 The project requires python to be installed on the system.
 
-This is a Django Project which depends on certial libraries to run. Install the requirements using the requirements.txt file as:
+This is a Django Project which depends on certain libraries to run. Install the requirements using the requirements.txt file as:
 
  ```pip install -r requirements.txt```
 
