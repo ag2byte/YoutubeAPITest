@@ -5,20 +5,20 @@ import dotenv
 import time
 import os
 import threading
-# import requests
 import datetime
 import json
 
 dotenv.read_dotenv()
-print(os.environ.get('TEST_DATA'))
+# getting environment variables
 mongo_client = MongoClient(os.environ.get('MONGO_DB_HOST'),int(os.environ.get('MONGO_DB_PORT')))
 api_key = os.environ.get('YOUTUBE_API_KEY')
 youtube_query = os.environ.get('YOTUUBE_QUERY_TERM')
 
 
-youtube = googleapiclient.discovery.build('youtube', 'v3', developerKey = api_key)
+youtube = googleapiclient.discovery.build('youtube', 'v3', developerKey = api_key) # building the youtube API with the api_key 
 afterdate = (datetime.datetime.now()- datetime.timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
-# print(afterdate)
+
+# connecting to the mongodb database
 db = mongo_client.ytapi
 db.VideoData.create_index('id',unique = True)
 
@@ -28,14 +28,14 @@ def main():
         run_in_background()
 
 def run_in_background():
-    
+    """Runs in background refreshing the content in the database every fixed interval of time"""
     message = youtube.search().list(
         part="snippet",
         maxResults=20,
         q=youtube_query,
 		type='video',
 		order='date',
-		publishedAfter=afterdate)
+		publishedAfter=afterdate) # youtube search Query
 
     response = message.execute()
 
@@ -50,12 +50,12 @@ def run_in_background():
         video_data['channel'] = item['snippet']['channelTitle']
         json_data = json.dumps(video_data)
         try:
-            newrecord = db.VideoData.insert_one(json.loads(json_data))
+            newrecord = db.VideoData.insert_one(json.loads(json_data)) # inserting data in mongodb database
             print("INSERTED"+str(newrecord.inserted_id))
         except Exception as e:
             pass
     
-t1 = threading.Thread(target=main)
+t1 = threading.Thread(target=main) # background process runs in a seperate thread
 t1.start()
 
 
