@@ -53,6 +53,8 @@ For example, if the server is running on `localhost`, use
 
 ```http://localhost:8000/?page=2``` for accessing the second page of the results
 
+- To clear the database record use ``````http://<host>/delete``````
+
 ## Example
 
 ```
