@@ -32,7 +32,7 @@ def run_in_background():
     message = youtube.search().list(
         part="snippet",
         maxResults=20,
-        q="no way home",
+        q=youtube_query,
 		type='video',
 		order='date',
 		publishedAfter=afterdate)
